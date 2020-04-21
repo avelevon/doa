@@ -40,7 +40,8 @@ const MainContainer = () => {
     const addTodo = name => {
         db.collection("todo").add({
             name: name,
-            finished: false
+            finished: false,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
         })
             .then(docRef => {
                 console.log("Document written with ID: ", docRef.id);
@@ -52,23 +53,20 @@ const MainContainer = () => {
     }
 
     const deleteTodo = todoId => {
-        setData(prevState => prevState.filter(todo => todo.id !== todoId))
+        db.collection("todo").doc(todoId).delete()
+            .then(() => console.log('document ' + todoId + ' has been deleted'))
+            .catch(err => console.log('Error removing document', err))
     }
 
-    const finishTodo = todoId => {
-        setData(prevState => prevState.map(todo => {
-            if (todo.id === todoId) {
-                return {
-                    ...todo,
-                    finished: !todo.finished
-                }
-            } else {
-                return todo
-            }
-        }))
+    const finishTodo = todo => {
+        db.collection("todo").doc(todo.id).update({
+            finished: !todo.finished
+        })
+            .then(() => console.log('Document has been updated'))
+            .catch(err => console.log("Error updating document: ", err))
     }
 
-    console.log(data)
+    // console.log(data)
     return (
         <View style={styles.wrapper}>
             <Header/>

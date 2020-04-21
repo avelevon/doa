@@ -8,7 +8,7 @@ const Todo = props => {
     return (
         <View style={styles.todo}>
             <TouchableHighlight
-                onPress={() => finishTodo(todo.id)}
+                onPress={() => finishTodo(todo)}
                 onLongPress={() => deleteTodo(todo.id)}
                 activeOpacity={0.6}
                 underlayColor="#DDDDDD"
